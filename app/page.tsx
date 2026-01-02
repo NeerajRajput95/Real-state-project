@@ -76,26 +76,26 @@ const INITIAL_PROPERTIES = [
 ];
 
 // Helper: Simple Distance Calculation (km)
-const getDistance = (lat1, lng1, lat2, lng2) => {
-  const R = 6371; 
-  const dLat = (lat2 - lat1) * (Math.PI / 180);
-  const dLng = (lng2 - lng1) * (Math.PI / 180);
-  const a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1 * (Math.PI/180)) * Math.cos(lat2 * (Math.PI/180)) * Math.sin(dLng/2) * Math.sin(dLng/2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-  return R * c; 
-};
+// const getDistance = (lat1, lng1, lat2, lng2) => {
+//   const R = 6371; 
+//   const dLat = (lat2 - lat1) * (Math.PI / 180);
+//   const dLng = (lng2 - lng1) * (Math.PI / 180);
+//   const a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1 * (Math.PI/180)) * Math.cos(lat2 * (Math.PI/180)) * Math.sin(dLng/2) * Math.sin(dLng/2);
+//   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+//   return R * c; 
+// };
 
 // Helper: Smart Score Logic
-const calculateSmartScore = (prop, amenities) => {
-  let score = 50; 
-  const nearestTransport = amenities.find(a => a.type === 'transport' && getDistance(prop.lat, prop.lng, a.lat, a.lng) < 0.5);
-  if (nearestTransport) score += 20;
-  const nearestMall = amenities.find(a => a.type === 'mall' && getDistance(prop.lat, prop.lng, a.lat, a.lng) < 0.8);
-  if (nearestMall) score += 20;
-  const nearestSchool = amenities.find(a => a.type === 'school' && getDistance(prop.lat, prop.lng, a.lat, a.lng) < 1.0);
-  if (nearestSchool) score += 10;
-  return Math.min(score, 100);
-};
+// const calculateSmartScore = (prop, amenities) => {
+//   let score = 50; 
+//   const nearestTransport = amenities.find(a => a.type === 'transport' && getDistance(prop.lat, prop.lng, a.lat, a.lng) < 0.5);
+//   if (nearestTransport) score += 20;
+//   const nearestMall = amenities.find(a => a.type === 'mall' && getDistance(prop.lat, prop.lng, a.lat, a.lng) < 0.8);
+//   if (nearestMall) score += 20;
+//   const nearestSchool = amenities.find(a => a.type === 'school' && getDistance(prop.lat, prop.lng, a.lat, a.lng) < 1.0);
+//   if (nearestSchool) score += 10;
+//   return Math.min(score, 100);
+// };
 
 // --- 2. MAIN DASHBOARD ---
 export default function RealEstateDashboard() {
@@ -108,27 +108,27 @@ export default function RealEstateDashboard() {
 
   const [newProp, setNewProp] = useState({ title: '', price: '', type: 'Apartment' });
 
-  const handleAddProperty = (e) => {
-    e.preventDefault();
-    const newId = properties.length + 1;
-    const randomOffsetLat = (Math.random() - 0.5) * 0.01;
-    const randomOffsetLng = (Math.random() - 0.5) * 0.01;
+  // const handleAddProperty = (e) => {
+  //   e.preventDefault();
+  //   const newId = properties.length + 1;
+  //   const randomOffsetLat = (Math.random() - 0.5) * 0.01;
+  //   const randomOffsetLng = (Math.random() - 0.5) * 0.01;
     
-    const added = {
-      id: newId,
-      ...newProp,
-      lat: CITY_CENTER.lat + randomOffsetLat,
-      lng: CITY_CENTER.lng + randomOffsetLng,
-      price: Number(newProp.price),
-      beds: Math.floor(Math.random() * 4) + 1,
-      baths: Math.floor(Math.random() * 3) + 1,
-      sqft: 1000 + Math.floor(Math.random() * 2000),
-      image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=500&q=80"
-    };
+  //   const added = {
+  //     id: newId,
+  //     ...newProp,
+  //     lat: CITY_CENTER.lat + randomOffsetLat,
+  //     lng: CITY_CENTER.lng + randomOffsetLng,
+  //     price: Number(newProp.price),
+  //     beds: Math.floor(Math.random() * 4) + 1,
+  //     baths: Math.floor(Math.random() * 3) + 1,
+  //     sqft: 1000 + Math.floor(Math.random() * 2000),
+  //     image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=500&q=80"
+  //   };
     
-    setProperties([...properties, added]);
-    setShowAddModal(false);
-  };
+  //   setProperties([...properties, added]);
+  //   setShowAddModal(false);
+  // };
 
   const filteredProperties = useMemo(() => {
     return properties.filter(p => 
@@ -140,9 +140,9 @@ export default function RealEstateDashboard() {
   // Smart Analysis for the selected property (Detail View)
   const smartAnalysis = useMemo(() => {
     if (!selectedProp) return null;
-    const score = calculateSmartScore(selectedProp, MOCK_AMENITIES);
-    const nearby = MOCK_AMENITIES.filter(a => getDistance(selectedProp.lat, selectedProp.lng, a.lat, a.lng) < 0.8);
-    return { score, nearby };
+    // const score = calculateSmartScore(selectedProp, MOCK_AMENITIES);
+    // const nearby = MOCK_AMENITIES.filter(a => getDistance(selectedProp.lat, selectedProp.lng, a.lat, a.lng) < 0.8);
+    // return { score, nearby };
   }, [selectedProp]);
 
   return (
@@ -261,11 +261,11 @@ export default function RealEstateDashboard() {
             {viewMode === 'grid' && (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
                 {filteredProperties.map(prop => {
-                  const score = calculateSmartScore(prop, MOCK_AMENITIES);
+                  // const score = calculateSmartScore(prop, MOCK_AMENITIES);
                   return (
                     <div 
                       key={prop.id}
-                      onClick={() => setSelectedProp(prop)}
+                      // onClick={() => setSelectedProp(prop)}
                       className="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 cursor-pointer flex flex-col"
                     >
                       <div className="relative h-48 overflow-hidden">
@@ -278,9 +278,7 @@ export default function RealEstateDashboard() {
                           {prop.type}
                         </div>
                         <div className="absolute bottom-3 left-3 flex gap-1">
-                           <div className={`px-2 py-1 rounded-md text-xs font-bold shadow-sm ${score > 80 ? 'bg-green-500 text-white' : 'bg-yellow-500 text-white'}`}>
-                              AI Score: {score}
-                           </div>
+                         
                         </div>
                       </div>
                       
@@ -315,11 +313,11 @@ export default function RealEstateDashboard() {
             {viewMode === 'list' && (
               <div className="space-y-3">
                  {filteredProperties.map(prop => {
-                   const score = calculateSmartScore(prop, MOCK_AMENITIES);
+                  //  const score = calculateSmartScore(prop, MOCK_AMENITIES);
                    return (
                      <div 
                         key={prop.id}
-                        onClick={() => setSelectedProp(prop)}
+                        // onClick={() => setSelectedProp(prop)}
                         className="bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-all border border-gray-100 cursor-pointer flex items-center gap-6"
                      >
                         <img src={prop.image} alt={prop.title} className="w-32 h-24 object-cover rounded-lg" />
@@ -333,9 +331,7 @@ export default function RealEstateDashboard() {
                         </div>
                         <div className="text-right">
                            <div className="text-xl font-bold text-indigo-600 mb-1">${prop.price.toLocaleString()}</div>
-                           <div className={`inline-block px-2 py-1 rounded text-xs font-bold ${score > 80 ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
-                              AI Score: {score}/100
-                           </div>
+                          
                         </div>
                      </div>
                    );
@@ -345,7 +341,7 @@ export default function RealEstateDashboard() {
 
             {filteredProperties.length === 0 && (
               <div className="flex flex-col items-center justify-center py-20 text-gray-400">
-                <Search size={48} className="mb-4 opacity-20" />
+                {/* <Search size={48} className="mb-4 opacity-20" /> */}
                 <p>No properties match your filters.</p>
                 <button onClick={() => {setFilterType('All'); setPriceRange(5000000)}} className="text-indigo-600 font-medium mt-2 hover:underline">Clear Filters</button>
               </div>
@@ -360,18 +356,18 @@ export default function RealEstateDashboard() {
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh]">
             
             <div className="relative h-64">
-              <img src={selectedProp.image} className="w-full h-full object-cover" alt="detail" />
+              {/* <img src={selectedProp.image} className="w-full h-full object-cover" alt="detail" /> */}
               <button 
                 onClick={() => setSelectedProp(null)}
                 className="absolute top-4 right-4 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full backdrop-blur transition-all"
               >
                 <X size={20} />
               </button>
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 pt-20">
-                <h2 className="text-3xl font-bold text-white mb-1">{selectedProp.title}</h2>
+              {/* <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 pt-20"> */}
+                {/* <h2 className="text-3xl font-bold text-white mb-1">{selectedProp.title}</h2> */}
                 <div className="flex items-center gap-2 text-white/90">
                   <MapPin size={16} /> 
-                  <span>Coordinates: {selectedProp.lat.toFixed(4)}, {selectedProp.lng.toFixed(4)}</span>
+                  {/* <span>Coordinates: {selectedProp.lat.toFixed(4)}, {selectedProp.lng.toFixed(4)}</span> */}
                 </div>
               </div>
             </div>
@@ -379,20 +375,20 @@ export default function RealEstateDashboard() {
             <div className="p-6 overflow-y-auto">
               <div className="flex justify-between items-start mb-6">
                  <div>
-                    <span className="text-gray-500 text-sm uppercase font-bold tracking-wider">{selectedProp.type}</span>
-                    <div className="text-3xl font-bold text-indigo-600 mt-1">${selectedProp.price.toLocaleString()}</div>
+                    {/* <span className="text-gray-500 text-sm uppercase font-bold tracking-wider">{selectedProp.type}</span> */}
+                    {/* <div className="text-3xl font-bold text-indigo-600 mt-1">${selectedProp.price.toLocaleString()}</div> */}
                  </div>
                  <div className="flex gap-6 text-center">
                     <div>
-                       <div className="text-2xl font-bold text-gray-800">{selectedProp.beds}</div>
+                       {/* <div className="text-2xl font-bold text-gray-800">{selectedProp.beds}</div> */}
                        <div className="text-xs text-gray-500 uppercase">Beds</div>
                     </div>
                     <div>
-                       <div className="text-2xl font-bold text-gray-800">{selectedProp.baths}</div>
+                       {/* <div className="text-2xl font-bold text-gray-800">{selectedProp.baths}</div> */}
                        <div className="text-xs text-gray-500 uppercase">Baths</div>
                     </div>
                     <div>
-                       <div className="text-2xl font-bold text-gray-800">{selectedProp.sqft}</div>
+                       {/* <div className="text-2xl font-bold text-gray-800">{selectedProp.sqft}</div> */}
                        <div className="text-xs text-gray-500 uppercase">Sqft</div>
                     </div>
                  </div>
@@ -409,14 +405,14 @@ export default function RealEstateDashboard() {
                     <p className="text-indigo-600 text-xs">Automated "Benidity" Scoring Engine</p>
                   </div>
                   <div className="ml-auto text-right">
-                     <span className="text-3xl font-black text-indigo-600">{smartAnalysis.score}</span>
+                     {/* <span className="text-3xl font-black text-indigo-600">{smartAnalysis.score}</span> */}
                      <span className="text-sm text-indigo-400 font-bold">/100</span>
                   </div>
                 </div>
 
                 <div className="space-y-3">
                    <h4 className="text-xs font-bold text-gray-500 uppercase mb-2">Nearby Key Assets (Calculated)</h4>
-                   {smartAnalysis.nearby.length > 0 ? (
+                   {/* {smartAnalysis.nearby.length > 0 ? (
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                         {smartAnalysis.nearby.map((item) => (
                           <div key={item.id} className="flex items-center gap-2 bg-white p-2 rounded border border-indigo-100 shadow-sm">
@@ -431,7 +427,7 @@ export default function RealEstateDashboard() {
                       <div className="text-gray-500 italic text-sm bg-white p-3 rounded border border-gray-100">
                         No major commercial hubs detected within immediate radius. High privacy score.
                       </div>
-                   )}
+                   )} */}
                 </div>
               </div>
 
@@ -441,11 +437,11 @@ export default function RealEstateDashboard() {
             </div>
 
           </div>
-        </div>
+        // </div>
       )}
 
       {/* ADD PROPERTY MODAL */}
-      {showAddModal && (
+      {/* {showAddModal && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center backdrop-blur-sm">
           <div className="bg-white rounded-xl shadow-2xl p-6 w-full max-w-md">
             <div className="flex justify-between items-center mb-6">
@@ -501,7 +497,7 @@ export default function RealEstateDashboard() {
             </form>
           </div>
         </div>
-      )}
+      )} */}
 
     </div>
   );
